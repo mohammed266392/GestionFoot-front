@@ -18,64 +18,68 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import gestionFoot.exception.AttaquantException;
+import gestionFoot.exception.MilieuException;
 import gestionFoot.model.Milieu;
 import gestionFoot.service.MilieuService;
-
 
 @RestController
 @RequestMapping("/api/milieu")
 public class MilieuRestController {
-	
-	
+
 	@Autowired
 	private MilieuService milieuService;
-	
-	
+
 	@GetMapping("")
 	public List<Milieu> getAll() {
 		return milieuService.getAll();
 	}
-	
-	@PostMapping("")
-	public Milieu create(@RequestBody Milieu attaquant) {
-		return milieuService.create(attaquant);
+
+	@GetMapping("/{id}")
+	public Milieu getById(@PathVariable Integer id) {
+		try {
+			return milieuService.getById(id);
+		} catch (MilieuException ex) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
 	}
-	
+
+	@PostMapping("")
+	public Milieu create(@RequestBody Milieu milieu) {
+		return milieuService.create(milieu);
+	}
+
 	@PutMapping("/{id}")
-	public Milieu update(@RequestBody Milieu attaquant, @PathVariable Integer id) {
+	public Milieu update(@RequestBody Milieu milieu, @PathVariable Integer id) {
 		try {
 			Milieu milieuEnBase = milieuService.getById(id);
 			if (milieuEnBase != null) {
-				attaquant.setId(id);
+				milieu.setId(id);
 			}
-		} catch (AttaquantException ex) {
+		} catch (MilieuException ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
-		return milieuService.update(attaquant);
+		return milieuService.update(milieu);
 	}
-	
+
 	@PatchMapping("/{id}")
-    public Milieu partalUpdateAttaquant(@RequestBody Map<String, Object> fields,@PathVariable Integer id ) {
-        try {
-            Milieu fourni = milieuService.getById(id);
-            fields.forEach((k, v) -> {
+	public Milieu partialUpdate(@RequestBody Map<String, Object> fields, @PathVariable Integer id) {
+		try {
+			Milieu milieu = milieuService.getById(id);
+			fields.forEach((k, v) -> {
+				Field field = ReflectionUtils.findField(Milieu.class, k);
+				ReflectionUtils.makeAccessible(field);
+				ReflectionUtils.setField(field, milieu, v); // ne fonctionne que pour les types standards
+			});
+			return milieuService.update(milieu);
+		} catch (RuntimeException ex) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
 
-                Field field = ReflectionUtils.findField(Milieu.class, k);
-                ReflectionUtils.makeAccessible(field);
-                ReflectionUtils.setField(field, fourni, v); // ne fonctionne que pour les types standards
+	}
 
-            });
-            return milieuService.update(fourni);
-        }catch(RuntimeException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-
-    }
-	
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Integer id) {
 		milieuService.deleteById(id);
 	}
-	
+
 }
