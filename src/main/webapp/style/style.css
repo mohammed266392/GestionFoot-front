@@ -1,0 +1,11 @@
+
+body{margin:5px;background: #F4EFE7;}
+#formAjout
+{
+	display:none;
+}
+
+#content{display:flex;justify-content:center;flex-wrap:wrap;}
+
+#content table{width:100%;}
+
