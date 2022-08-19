@@ -18,63 +18,64 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import gestionFoot.exception.AttaquantException;
-import gestionFoot.model.Attaquant;
-import gestionFoot.service.AttaquantService;
+import gestionFoot.exception.EntraineurException;
+import gestionFoot.model.Entraineur;
+import gestionFoot.service.EntraineurService;
 
 
 @RestController
-@RequestMapping("/api/attaquant")
-public class AttaquantRestController {
+@RequestMapping("/api/entraineur")
+public class EntraineurRestController {
 	
 	
 	@Autowired
-	private AttaquantService attaquantService;
+	private EntraineurService entraineurService;
+	
 	
 	@GetMapping("/{id}")
-	public Attaquant getById(@PathVariable Integer id) {
+	public Entraineur getById(@PathVariable Integer id) {
 		try {
-			return attaquantService.getById(id);
-		} catch (AttaquantException ex) {
+			return entraineurService.getById(id);
+		} catch (EntraineurException ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("")
-	public List<Attaquant> getAll() {
-		return attaquantService.getAll();
+	public List<Entraineur> getAll() {
+		return entraineurService.getAll();
 	}
 	
 	@PostMapping("")
-	public Attaquant create(@RequestBody Attaquant attaquant) {
-		return attaquantService.create(attaquant);
+	public Entraineur create(@RequestBody Entraineur entraineur) {
+		return entraineurService.create(entraineur);
 	}
 	
 	@PutMapping("/{id}")
-	public Attaquant update(@RequestBody Attaquant attaquant, @PathVariable Integer id) {
+	public Entraineur update(@RequestBody Entraineur entraineur, @PathVariable Integer id) {
 		try {
-			Attaquant attaquantEnBase = attaquantService.getById(id);
-			if (attaquantEnBase != null) {
-				attaquant.setId(id);
+			Entraineur entraineurEnBase = entraineurService.getById(id);
+			if (entraineurEnBase != null) {
+				entraineur.setId(id);
 			}
-		} catch (AttaquantException ex) {
+		} catch (EntraineurException ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
-		return attaquantService.update(attaquant);
+		return entraineurService.update(entraineur);
 	}
 	
 	@PatchMapping("/{id}")
-    public Attaquant partialUpdateAttaquant(@RequestBody Map<String, Object> fields,@PathVariable Integer id ) {
+    public Entraineur partialUpdateEntraineur(@RequestBody Map<String, Object> fields,@PathVariable Integer id ) {
         try {
-            Attaquant fourni = attaquantService.getById(id);
+            Entraineur fourni = entraineurService.getById(id);
             fields.forEach((k, v) -> {
 
-                Field field = ReflectionUtils.findField(Attaquant.class, k);
+                Field field = ReflectionUtils.findField(Entraineur.class, k);
                 ReflectionUtils.makeAccessible(field);
                 ReflectionUtils.setField(field, fourni, v); // ne fonctionne que pour les types standards
 
             });
-            return attaquantService.update(fourni);
+            return entraineurService.update(fourni);
         }catch(RuntimeException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -83,7 +84,7 @@ public class AttaquantRestController {
 	
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Integer id) {
-		attaquantService.deleteById(id);
+		entraineurService.deleteById(id);
 	}
 	
 }

@@ -18,63 +18,65 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import gestionFoot.exception.AttaquantException;
-import gestionFoot.model.Attaquant;
-import gestionFoot.service.AttaquantService;
+import gestionFoot.exception.ArbitreException;
+import gestionFoot.model.Arbitre;
+import gestionFoot.service.ArbitreService;
 
 
 @RestController
-@RequestMapping("/api/attaquant")
-public class AttaquantRestController {
+@RequestMapping("/api/arbitre")
+public class ArbitreRestController {
 	
 	
 	@Autowired
-	private AttaquantService attaquantService;
+	private ArbitreService arbitreService;
+	
 	
 	@GetMapping("/{id}")
-	public Attaquant getById(@PathVariable Integer id) {
+	public Arbitre getById(@PathVariable Integer id) {
 		try {
-			return attaquantService.getById(id);
-		} catch (AttaquantException ex) {
+			return arbitreService.getById(id);
+		} catch (ArbitreException ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
+	
 	@GetMapping("")
-	public List<Attaquant> getAll() {
-		return attaquantService.getAll();
+	public List<Arbitre> getAll() {
+		return arbitreService.getAll();
 	}
 	
 	@PostMapping("")
-	public Attaquant create(@RequestBody Attaquant attaquant) {
-		return attaquantService.create(attaquant);
+	public Arbitre create(@RequestBody Arbitre arbitre) {
+		return arbitreService.create(arbitre);
 	}
 	
 	@PutMapping("/{id}")
-	public Attaquant update(@RequestBody Attaquant attaquant, @PathVariable Integer id) {
+	public Arbitre update(@RequestBody Arbitre arbitre, @PathVariable Integer id) {
 		try {
-			Attaquant attaquantEnBase = attaquantService.getById(id);
-			if (attaquantEnBase != null) {
-				attaquant.setId(id);
+			Arbitre arbitreEnBase = arbitreService.getById(id);
+			if (arbitreEnBase != null) {
+				arbitre.setId(id);
 			}
-		} catch (AttaquantException ex) {
+		} catch (ArbitreException ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
-		return attaquantService.update(attaquant);
+		return arbitreService.update(arbitre);
 	}
 	
 	@PatchMapping("/{id}")
-    public Attaquant partialUpdateAttaquant(@RequestBody Map<String, Object> fields,@PathVariable Integer id ) {
+    public Arbitre partialUpdateArbitre(@RequestBody Map<String, Object> fields,@PathVariable Integer id ) {
         try {
-            Attaquant fourni = attaquantService.getById(id);
+            Arbitre fourni = arbitreService.getById(id);
             fields.forEach((k, v) -> {
 
-                Field field = ReflectionUtils.findField(Attaquant.class, k);
+                Field field = ReflectionUtils.findField(Arbitre.class, k);
                 ReflectionUtils.makeAccessible(field);
                 ReflectionUtils.setField(field, fourni, v); // ne fonctionne que pour les types standards
 
             });
-            return attaquantService.update(fourni);
+            return arbitreService.update(fourni);
         }catch(RuntimeException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -83,7 +85,7 @@ public class AttaquantRestController {
 	
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Integer id) {
-		attaquantService.deleteById(id);
+		arbitreService.deleteById(id);
 	}
 	
 }
