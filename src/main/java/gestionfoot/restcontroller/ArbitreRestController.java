@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import gestionFoot.exception.ArbitreException;
+import gestionFoot.jsonviews.JsonViews;
 import gestionFoot.model.Arbitre;
 import gestionFoot.service.ArbitreService;
 
@@ -31,7 +34,7 @@ public class ArbitreRestController {
 	@Autowired
 	private ArbitreService arbitreService;
 	
-	
+	@JsonView(JsonViews.Base.class)
 	@GetMapping("/{id}")
 	public Arbitre getById(@PathVariable Integer id) {
 		try {
@@ -41,12 +44,13 @@ public class ArbitreRestController {
 		}
 	}
 	
-	
+	@JsonView(JsonViews.Base.class)
 	@GetMapping("")
 	public List<Arbitre> getAll() {
 		return arbitreService.getAll();
 	}
 	
+	@JsonView(JsonViews.Base.class)
 	@PostMapping("")
 	public Arbitre create(@RequestBody Arbitre arbitre) {
 		return arbitreService.create(arbitre);

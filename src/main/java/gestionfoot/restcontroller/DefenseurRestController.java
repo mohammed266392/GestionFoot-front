@@ -27,18 +27,18 @@ import gestionFoot.service.DefenseurService;
 public class DefenseurRestController {
 	
 	@Autowired
-	private DefenseurService DefenseurService;
+	private DefenseurService defenseurService;
 	
 	
 	@GetMapping("")
 	public List<Defenseur> getAll() {
-		return DefenseurService.getAll();
+		return defenseurService.getAll();
 	}
 	@GetMapping("/{id}")
 	public Defenseur getById(@PathVariable Integer id) {
 		
 		try {
-			return DefenseurService.getById(id);
+			return defenseurService.getById(id);
 		}catch (DefenseurException ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
@@ -46,27 +46,27 @@ public class DefenseurRestController {
 	
 	
 	@PostMapping("")
-	public Defenseur create(@RequestBody Defenseur Defenseur) {
-		return DefenseurService.create(Defenseur);
+	public Defenseur create(@RequestBody Defenseur defenseur) {
+		return defenseurService.create(defenseur);
 	}
 	
 	@PutMapping("/{id}")
-	public Defenseur update(@RequestBody Defenseur Defenseur, @PathVariable Integer id) {
+	public Defenseur update(@RequestBody Defenseur defenseur, @PathVariable Integer id) {
 		try {
-			Defenseur DefenseurEnBase = DefenseurService.getById(id);
+			Defenseur DefenseurEnBase = defenseurService.getById(id);
 			if (DefenseurEnBase != null) {
-				Defenseur.setId(id);
+				defenseur.setId(id);
 			}
 		} catch (DefenseurException ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
-		return DefenseurService.update(Defenseur);
+		return defenseurService.update(defenseur);
 	}
 	
 	@PatchMapping("/{id}")
-    public Defenseur partalUpdateDefenseur(@RequestBody Map<String, Object> fields,@PathVariable Integer id ) {
+    public Defenseur partialUpdate(@RequestBody Map<String, Object> fields,@PathVariable Integer id ) {
         try {
-            Defenseur fourni = DefenseurService.getById(id);
+            Defenseur fourni = defenseurService.getById(id);
             fields.forEach((k, v) -> {
 
                 Field field = ReflectionUtils.findField(Defenseur.class, k);
@@ -74,7 +74,7 @@ public class DefenseurRestController {
                 ReflectionUtils.setField(field, fourni, v); // ne fonctionne que pour les types standards
 
             });
-            return DefenseurService.update(fourni);
+            return defenseurService.update(fourni);
         }catch(RuntimeException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -83,6 +83,6 @@ public class DefenseurRestController {
 	
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Integer id) {
-		DefenseurService.deleteById(id);
+		defenseurService.deleteById(id);
 	}
 }

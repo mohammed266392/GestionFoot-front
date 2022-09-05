@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
+
 import gestionFoot.config.AppConfig;
 
 @Configuration
@@ -31,4 +32,8 @@ public class WebConfig implements WebMvcConfigurer{
 		viewResolver.setViewClass(JstlView.class);
 		return viewResolver;
 	}
+	
+
+
+
 }

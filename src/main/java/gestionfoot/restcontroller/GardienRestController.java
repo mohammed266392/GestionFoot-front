@@ -28,18 +28,18 @@ import gestionFoot.service.GardienService;
 public class GardienRestController {
 	
 	@Autowired
-	GardienService GardienService ;
+	GardienService gardienService ;
 	
 	
 	@GetMapping("")
 	public List<Gardien> getAll() {
-		return GardienService.getAll();
+		return gardienService.getAll();
 	}
 	@GetMapping("/{id}")
 	public Gardien getById(@PathVariable Integer id) {
 		
 		try {
-			return GardienService.getById(id);
+			return gardienService.getById(id);
 		}catch (GardienException ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
@@ -47,27 +47,27 @@ public class GardienRestController {
 	
 	
 	@PostMapping("")
-	public Gardien create(@RequestBody Gardien Gardien) {
-		return GardienService.create(Gardien);
+	public Gardien create(@RequestBody Gardien gardien) {
+		return gardienService.create(gardien);
 	}
 	
 	@PutMapping("/{id}")
 	public Gardien update(@RequestBody Gardien Gardien, @PathVariable Integer id) {
 		try {
-			Gardien GardienEnBase = GardienService.getById(id);
+			Gardien GardienEnBase = gardienService.getById(id);
 			if (GardienEnBase != null) {
 				Gardien.setId(id);
 			}
 		} catch (GardienException ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
-		return GardienService.update(Gardien);
+		return gardienService.update(Gardien);
 	}
 	
 	@PatchMapping("/{id}")
-    public Gardien partalUpdateGardien(@RequestBody Map<String, Object> fields,@PathVariable Integer id ) {
+    public Gardien partialUpdate(@RequestBody Map<String, Object> fields,@PathVariable Integer id ) {
         try {
-            Gardien fourni = GardienService.getById(id);
+            Gardien fourni = gardienService.getById(id);
             fields.forEach((k, v) -> {
 
                 Field field = ReflectionUtils.findField(Gardien.class, k);
@@ -75,7 +75,7 @@ public class GardienRestController {
                 ReflectionUtils.setField(field, fourni, v); // ne fonctionne que pour les types standards
 
             });
-            return GardienService.update(fourni);
+            return gardienService.update(fourni);
         }catch(RuntimeException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -84,7 +84,7 @@ public class GardienRestController {
 	
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Integer id) {
-		GardienService.deleteById(id);
+		gardienService.deleteById(id);
 	}
 
 }
